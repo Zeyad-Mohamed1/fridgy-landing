@@ -2080,3 +2080,429 @@ blockquote {
     opacity: 1;
   }
 }
+
+/* Agentic UI: Fridgy inside Siri, Gemini and its own app */
+.agentic-head {
+  max-width: 44rem;
+  margin-bottom: 2.5rem;
+}
+
+.agentic-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.surface-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: var(--cream);
+}
+
+.surface-tabs button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 0.4rem;
+  background: transparent;
+  color: var(--forest);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.surface-tabs button[aria-selected="true"] {
+  background: var(--forest);
+  color: var(--ivory);
+}
+
+.device {
+  --screen: #101512;
+  --ink: #f4f1ea;
+  --bubble: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  min-height: 34rem;
+  padding-bottom: 5rem !important;
+  border-radius: 44px;
+  border: 9px solid var(--forest);
+  background: var(--screen);
+  color: var(--ink);
+  padding: 1.1rem 1rem 1rem;
+  box-shadow: 0 30px 60px -25px rgba(37, 52, 38, 0.55);
+  transition: background-color 0.5s, color 0.5s;
+}
+
+.device[data-theme-surface="gemini"] {
+  --screen: #f3f5fb;
+  --ink: #1d2433;
+  --bubble: #e4e9f5;
+}
+
+.device[data-theme-surface="app"] {
+  --screen: var(--ivory);
+  --ink: var(--forest);
+  --bubble: var(--sage);
+}
+
+.device-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-family: var(--display);
+}
+
+.device-app {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.engine {
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--bubble);
+}
+
+.convo {
+  display: grid;
+  gap: 0.7rem;
+  align-content: start;
+}
+
+.ask {
+  justify-self: end;
+  max-width: 88%;
+  margin: 0;
+  padding: 0.7rem 0.95rem;
+  border-radius: 20px 20px 6px 20px;
+  background: var(--bubble);
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  min-height: 2.6rem;
+}
+
+.device[data-theme-surface="siri"] .ask {
+  justify-self: center;
+  text-align: center;
+  background: none;
+  font-size: 1.15rem;
+}
+
+.agent-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.agent-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.85;
+}
+
+.agent-steps li::before {
+  content: "";
+  flex: none;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+.agent-steps li.ok::before {
+  border: 0;
+  background: var(--leaf);
+  animation: none;
+  -webkit-mask: none;
+  box-shadow: inset 0 0 0 3px var(--leaf);
+}
+
+.agent-steps code {
+  font-size: 0.78rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 6px;
+  background: var(--bubble);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.agent-card {
+  background: var(--ivory);
+  color: var(--forest);
+  border-radius: 22px;
+  padding: 0.9rem 1rem 1rem;
+  box-shadow: 0 16px 32px -18px rgba(0, 0, 0, 0.55);
+}
+
+.agent-card-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.55rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-family: var(--display);
+}
+
+.agent-card-head img {
+  grid-row: span 2;
+  width: 1.9rem;
+  height: auto;
+}
+
+.agent-card-head strong {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.agent-card-head span {
+  font-size: 0.72rem;
+  color: var(--deep-sage);
+}
+
+.agent-card-list {
+  list-style: none;
+  margin: 0 0 0.8rem;
+  padding: 0;
+  font-size: 0.88rem;
+}
+
+.agent-card-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(37, 52, 38, 0.12);
+  font-family: var(--display);
+  font-weight: 500;
+}
+
+.agent-card-list small {
+  display: block;
+  font-family: var(--body);
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: var(--deep-sage);
+}
+
+.reply {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.orb {
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  width: 3.4rem;
+  height: 3.4rem;
+  margin-left: -1.7rem;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #ffd166, #82a52f, #a2b19a, #f0bd96, #ffd166);
+  filter: blur(1px);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.device[data-theme-surface="siri"] .orb {
+  opacity: 1;
+  animation: orb 2.4s linear infinite;
+}
+
+.device.listening .orb {
+  animation-duration: 0.9s;
+  transform: scale(1.15);
+}
+
+@keyframes orb {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.replay {
+  display: block;
+  margin: 0.9rem auto 0;
+  border: 0;
+  background: none;
+  color: var(--deep-sage);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.agentic-points {
+  display: grid;
+  gap: 1rem;
+}
+
+.point {
+  background: var(--cream);
+  border-radius: 28px;
+  padding: 1.3rem 1.5rem;
+}
+
+.point h3 {
+  margin: 0 0 0.5rem;
+}
+
+.point p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.engines {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+  max-width: 22rem;
+}
+
+.engines li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 16px;
+  background: var(--ivory);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.engines small {
+  margin-left: auto;
+  font-weight: 400;
+  font-size: 0.78rem;
+  color: var(--deep-sage);
+}
+
+.radio {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  border: 2px solid var(--deep-sage);
+}
+
+.engines li.on {
+  outline: 2px solid var(--forest);
+}
+
+.engines li.on .radio {
+  border-color: var(--forest);
+  background: radial-gradient(circle, var(--forest) 45%, transparent 50%);
+}
+
+.tools {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.3rem 0 0.8rem;
+  padding: 0;
+}
+
+.tools code {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: var(--forest);
+  color: var(--ivory);
+  font-size: 0.85rem;
+}
+
+.small-note {
+  font-size: 0.9rem !important;
+  color: var(--deep-sage);
+}
+
+/* Plan prices */
+.price {
+  margin: -0.5rem 0 1rem;
+  font-size: 0.95rem;
+  color: var(--deep-sage);
+}
+
+.price b {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--forest);
+}
+
+.plan.plus .price,
+.plan.plus .price b {
+  color: var(--ivory);
+}
+
+.save {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--forest);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.78rem;
+  vertical-align: 0.3em;
+}
+
+@media (max-width: 900px) {
+  .agentic-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .explorer {
+    max-width: 24rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-steps li::before,
+  .device[data-theme-surface="siri"] .orb {
+    animation: none;
+  }
+}
+
+.device[data-theme-surface="app"] .agent-card {
+  border: 2px solid var(--sage);
+  box-shadow: none;
+}
+
+.tools code {
+  font-family: var(--display);
+  font-weight: 500;
+}

@@ -243,6 +243,75 @@
         </div>
       </section>
 
+      <section class="chapter full agentic" id="agentic" data-state="agentic">
+        <div class="agentic-head">
+          <p class="eyebrow">Agentic UI</p>
+          <h2>Fridgy, wherever your AI is</h2>
+          <p>Fridgy isn't locked inside one app. Its actions (add food, use food, check what's expiring, plan meals) are tools any AI assistant can call. Ask Siri or Gemini, and Fridgy answers inside their chat with its own interactive cards. Try it below.</p>
+        </div>
+
+        <div class="agentic-grid">
+          <div class="explorer">
+            <div class="surface-tabs" role="tablist" aria-label="Where you ask">
+              <button type="button" role="tab" aria-selected="true" data-surface="siri">Siri</button>
+              <button type="button" role="tab" aria-selected="false" data-surface="gemini">Gemini</button>
+              <button type="button" role="tab" aria-selected="false" data-surface="app">Fridgy app</button>
+            </div>
+
+            <div class="device" data-theme-surface="siri">
+              <div class="device-top">
+                <span class="device-app" data-device-app>Siri</span>
+                <span class="engine" data-engine></span>
+              </div>
+              <div class="convo" aria-live="polite">
+                <p class="ask" data-ask></p>
+                <ol class="agent-steps" data-steps></ol>
+                <div class="agent-card" data-card hidden>
+                  <div class="agent-card-head">
+                    <img src="/img/brand/logo.svg" alt="" width="28" height="29" />
+                    <strong data-card-title></strong>
+                    <span>Fridgy card</span>
+                  </div>
+                  <ul class="agent-card-list" data-card-list></ul>
+                  <button class="button small" type="button" data-card-action></button>
+                </div>
+                <p class="reply" data-reply hidden></p>
+              </div>
+              <span class="orb" aria-hidden="true"></span>
+            </div>
+            <button class="replay" type="button" data-replay>Replay</button>
+          </div>
+
+          <div class="agentic-points">
+            <article class="point">
+              <h3>Bring your own AI</h3>
+              <p>Users can connect the AI they already pay for. Fridgy's agent then runs on their own account instead of ours, so heavy users don't drive up our costs and plans stay cheap.</p>
+              <ul class="engines" aria-label="Example AI engine setting">
+                <li><span class="radio"></span>Fridgy AI <small>Included</small></li>
+                <li class="on"><span class="radio"></span>Gemini <small>Your account</small></li>
+                <li><span class="radio"></span>ChatGPT <small>Your account</small></li>
+              </ul>
+            </article>
+            <article class="point">
+              <h3>Works from Siri and Gemini</h3>
+              <p>"Hey Siri, tell Fridgy I bought eggs." The assistant calls Fridgy's tools, and Fridgy shows a card to review and confirm, right inside the assistant. No need to open the app.</p>
+            </article>
+            <article class="point">
+              <h3>What assistants can do</h3>
+              <ul class="tools">
+                <li><code>Add food</code></li>
+                <li><code>Use food</code></li>
+                <li><code>Check what's expiring</code></li>
+                <li><code>Suggest recipes</code></li>
+                <li><code>Plan meals</code></li>
+                <li><code>Order groceries</code></li>
+              </ul>
+              <p class="small-note">Nothing changes in your fridge until you confirm on the card.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section class="chapter" data-state="cook">
         <div class="copy">
           <h2>Dinner, decided</h2>
@@ -413,7 +482,7 @@
             <div class="way-copy">
               <span class="way-num">02</span>
               <h3>AI meal plans, by the week or the month</h3>
-              <p>Paid plans where Fridgy's AI plans your meals for the whole week or month. Every plan is built from two things Fridgy already knows, so it fits your fridge and your life instead of being random recipes.</p>
+              <p>Paid plans, <strong>$2 a week</strong> or <strong>$6 a month</strong>, where Fridgy's AI plans your meals for the whole week or month. Every plan is built from two things Fridgy already knows, so it fits your fridge and your life instead of being random recipes. Users who connect their own AI keep our AI costs low, so the margin stays healthy.</p>
 
               <div class="sources">
                 <div class="source-card">
@@ -472,27 +541,29 @@
         <div class="plans">
           <section class="plan">
             <h3>Free</h3>
-            <p class="plan-sub">Stop wasting food</p>
+            <p class="price"><b>$0</b> forever</p>
             <ul>
               <li>Track what's in your fridge</li>
               <li>Expiry reminders</li>
               <li>Add food by chat</li>
               <li>Smart shopping list and store orders</li>
+              <li>Use Fridgy from Siri and Gemini</li>
             </ul>
           </section>
           <section class="plan">
             <h3>Weekly plan</h3>
-            <p class="plan-sub">Subscription, billed weekly</p>
+            <p class="price"><b>$2</b> / week</p>
             <ul>
               <li>Everything in Free</li>
               <li>An AI meal plan for the next 7 days</li>
               <li>Built from your fridge and your persona</li>
+              <li>Bring your own AI, or use ours</li>
               <li>Missing items added to your list</li>
             </ul>
           </section>
           <section class="plan plus">
             <h3>Monthly plan</h3>
-            <p class="plan-sub">Subscription, billed monthly</p>
+            <p class="price"><b>$6</b> / month <span class="save">Save 30%</span></p>
             <ul>
               <li>Everything in Weekly</li>
               <li>A full month of meals, planned week by week</li>

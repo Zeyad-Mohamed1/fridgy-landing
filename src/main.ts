@@ -44,6 +44,7 @@ const STATES: Record<string, Stage> = {
   customers: big({ s: 0.8, ry: -0.5, wave: 1 }),
   // Full-width sections: Fridgy hops out so the screens and plans have the stage
   screens: big({ ax: 0.74, ay: -1.4, s: 0.001 }),
+  agentic: big({ ax: 0.74, ay: -1.4, s: 0.001 }),
   business: big({ ax: 0.74, ay: -1.4, s: 0.001 }),
   closing: big({ s: 0.95, ry: -0.3, wave: 1 }),
   team: big({ s: 0.85, ry: -0.45, wave: 1 }),
@@ -287,6 +288,160 @@ function initTeam(fridgy: Fridgy | null) {
     const st = ScrollTrigger.create({ trigger: section, start: "top 60%", once: true, onEnter: () => activate(0) });
     return () => st.kill();
   });
+}
+
+type Surface = "siri" | "gemini" | "app";
+interface AgentDemo {
+  app: string;
+  engine: string;
+  ask: string;
+  steps: string[];
+  title: string;
+  rows: { name: string; note: string; value: string }[];
+  action: string;
+  reply: string;
+}
+
+const AGENT: Record<Surface, AgentDemo> = {
+  siri: {
+    app: "Siri",
+    engine: "Using Fridgy",
+    ask: "Hey Siri, tell Fridgy I bought 6 eggs and 2 litres of milk.",
+    steps: ["Siri is asking Fridgy", "Adding food", "Fridgy prepared a card"],
+    title: "Add 2 items to your fridge?",
+    rows: [
+      { name: "Eggs", note: "Fridge", value: "6 pcs" },
+      { name: "Milk", note: "Fridge door", value: "2 L" },
+    ],
+    action: "Confirm",
+    reply: "Done. Fridgy added 2 items to your fridge.",
+  },
+  gemini: {
+    app: "Gemini",
+    engine: "Using Fridgy",
+    ask: "What can I cook tonight with what's in my fridge?",
+    steps: ["Gemini is using Fridgy", "Checking what's expiring", "Suggesting recipes"],
+    title: "Tonight's ideas from your fridge",
+    rows: [
+      { name: "Chicken and spinach stir-fry", note: "Uses spinach before tomorrow", value: "25 min" },
+      { name: "Shakshuka", note: "Eggs, tomatoes and peppers", value: "20 min" },
+    ],
+    action: "Add missing items to list",
+    reply: "The spinach expires tomorrow, so I put the stir-fry first. 1 item added to your shopping list.",
+  },
+  app: {
+    app: "Fridgy AI",
+    engine: "Running on your Gemini",
+    ask: "Plan my meals for this week.",
+    steps: ["Using your connected AI", "Reading your fridge and your profile", "Planning your meals"],
+    title: "Your week, planned",
+    rows: [
+      { name: "Sat · Chicken and spinach stir-fry", note: "Uses spinach first", value: "" },
+      { name: "Sun · Shakshuka", note: "From your fridge", value: "" },
+      { name: "Mon · Grilled chicken bowl", note: "Training day", value: "" },
+    ],
+    action: "Save my plan",
+    reply: "Saved. The AI work ran on your own account, not Fridgy's.",
+  },
+};
+
+// Agentic UI explorer: the same Fridgy tools and card, driven from Siri, Gemini or the Fridgy app
+function initAgentic() {
+  const root = document.querySelector<HTMLElement>(".agentic")!;
+  const tabs = root.querySelectorAll<HTMLButtonElement>("[data-surface]");
+  const device = root.querySelector<HTMLElement>(".device")!;
+  const appName = root.querySelector<HTMLElement>("[data-device-app]")!;
+  const engine = root.querySelector<HTMLElement>("[data-engine]")!;
+  const ask = root.querySelector<HTMLElement>("[data-ask]")!;
+  const steps = root.querySelector<HTMLElement>("[data-steps]")!;
+  const card = root.querySelector<HTMLElement>("[data-card]")!;
+  const cardTitle = root.querySelector<HTMLElement>("[data-card-title]")!;
+  const cardList = root.querySelector<HTMLElement>("[data-card-list]")!;
+  const action = root.querySelector<HTMLButtonElement>("[data-card-action]")!;
+  const reply = root.querySelector<HTMLElement>("[data-reply]")!;
+  let surface: Surface = "siri";
+  let tl: gsap.core.Timeline | null = null;
+  const fast = reduce ? 0 : 1;
+
+  // Step text may contain a `tool` name, shown as code
+  function stepEl(text: string) {
+    const li = document.createElement("li");
+    text.split("`").forEach((part, i) => {
+      if (i % 2) {
+        const code = document.createElement("code");
+        code.textContent = part;
+        li.append(code);
+      } else if (part) li.append(part);
+    });
+    return li;
+  }
+
+  function play(next: Surface) {
+    surface = next;
+    tl?.kill();
+    const d = AGENT[next];
+    tabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.surface === next)));
+    device.dataset.themeSurface = next;
+    appName.textContent = d.app;
+    engine.textContent = d.engine;
+    ask.textContent = "";
+    steps.replaceChildren();
+    card.hidden = true;
+    reply.hidden = true;
+    action.disabled = false;
+    action.textContent = d.action;
+    cardTitle.textContent = d.title;
+    cardList.replaceChildren(
+      ...d.rows.map((r) => {
+        const li = document.createElement("li");
+        const name = document.createElement("span");
+        name.textContent = r.name;
+        const note = document.createElement("small");
+        note.textContent = r.note;
+        name.append(note);
+        const value = document.createElement("span");
+        value.textContent = r.value;
+        li.append(name, value);
+        return li;
+      }),
+    );
+
+    const chars = Array.from(d.ask);
+    const typed = { n: 0 };
+    tl = gsap.timeline();
+    if (next === "siri") tl.call(() => device.classList.add("listening"));
+    tl.to(typed, {
+      n: chars.length,
+      duration: chars.length * 0.03 * fast,
+      ease: "none",
+      onUpdate: () => (ask.textContent = chars.slice(0, Math.round(typed.n)).join("")),
+    });
+    tl.call(() => device.classList.remove("listening"));
+    d.steps.forEach((text, i) => {
+      tl!.call(() => {
+        steps.querySelectorAll("li").forEach((li) => li.classList.add("ok"));
+        const li = stepEl(text);
+        steps.append(li);
+        if (!reduce) gsap.from(li, { opacity: 0, y: 6, duration: 0.25 });
+      }, [], `+=${(i === 0 ? 0.3 : 0.7) * fast}`);
+    });
+    tl.call(() => {
+      steps.querySelectorAll("li").forEach((li) => li.classList.add("ok"));
+      card.hidden = false;
+    }, [], `+=${0.7 * fast}`);
+    if (!reduce) tl.from(card, { opacity: 0, y: 30, scale: 0.96, duration: 0.5, ease: "back.out(1.6)" });
+  }
+
+  action.addEventListener("click", () => {
+    action.disabled = true;
+    action.textContent = "Confirmed";
+    reply.textContent = AGENT[surface].reply;
+    reply.hidden = false;
+    if (!reduce) gsap.from(reply, { opacity: 0, y: 8, duration: 0.35 });
+  });
+  tabs.forEach((t) => t.addEventListener("click", () => play(t.dataset.surface as Surface)));
+  root.querySelector("[data-replay]")!.addEventListener("click", () => play(surface));
+  ScrollTrigger.create({ trigger: device, start: "top 75%", once: true, onEnter: () => play("siri") });
 }
 
 // Content that grows after load (the AI demo results, the meal plan toggle) shifts everything below it,
@@ -646,4 +801,5 @@ initChat(fridgy);
 initPlanner();
 initCapture(fridgy);
 initTeam(fridgy);
+initAgentic();
 keepTriggersFresh();
