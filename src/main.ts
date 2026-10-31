@@ -36,13 +36,17 @@ const STATES: Record<string, Stage> = {
   numbers: big({ s: 0.8, ry: -0.5, mood: "sad" }),
   meet: narrator(-1, { wave: 1 }),
   tell: big({ s: 0.9, ry: -0.5 }),
+  snap: big({ s: 0.85, ry: -0.7 }),
   cook: narrator(1, { s: 0.6, open: 1, pan: 1 }),
   lifestyle: big({ s: 0.85, ry: -0.95 }),
   kitchen: big({ s: 0.8, ry: -0.3, open: 1, pan: 1 }),
   impact: big({ s: 0.9, ry: -0.2, celebrate: 1 }),
   customers: big({ s: 0.8, ry: -0.5, wave: 1 }),
-  business: big({ s: 0.75, ry: -0.6 }),
+  // Full-width sections: Fridgy hops out so the screens and plans have the stage
+  screens: big({ ax: 0.74, ay: -1.4, s: 0.001 }),
+  business: big({ ax: 0.74, ay: -1.4, s: 0.001 }),
   closing: big({ s: 0.95, ry: -0.3, wave: 1 }),
+  team: big({ s: 0.85, ry: -0.45, wave: 1 }),
 };
 
 const narrow = () => innerWidth / innerHeight < 0.85 || innerWidth < 820;
@@ -69,6 +73,9 @@ function initStage(): Fridgy | null {
   if (!webglAvailable()) {
     canvas.hidden = true;
     document.querySelector<HTMLImageElement>(".stage-fallback")!.hidden = false;
+    greet.classList.add("static");
+    introDone = true;
+    say(GREETING, 0.4);
     return null;
   }
 
@@ -89,11 +96,13 @@ function initStage(): Fridgy | null {
   scene.add(fridgy.root);
 
   const cur = { ...forViewport("hero") };
+  const head = new THREE.Vector3();
   let active = "hero";
   const pointer = { x: 0, y: 0 };
 
   function go(name: string) {
     active = name;
+    onStage(name);
     const target = forViewport(name);
     fridgy.setMood(target.mood);
     const { mood: _mood, ...nums } = target;
@@ -132,8 +141,7 @@ function initStage(): Fridgy | null {
     pointer.y = -((e.clientY / innerHeight) * 2 - 1);
   });
 
-  // One entrance moment: Fridgy hops up into the hero
-  if (!reduce) gsap.from(cur, { ay: -1.6, duration: 1.4, ease: "back.out(1.4)", delay: 0.2 });
+  intro(fridgy, cur);
 
   renderer.setAnimationLoop((ms) => {
     const t = ms / 1000;
@@ -145,9 +153,178 @@ function initStage(): Fridgy | null {
     fridgy.root.rotation.y = cur.ry + pointer.x * 0.15 * motion;
     fridgy.update(t, pointer, motion);
     renderer.render(scene, camera);
+
+    // Keep the speech bubble pinned just above Fridgy's head
+    if (!greet.hidden) {
+      // Desktop: beside the face, up and to the left. Phones: centred above the head.
+      const side = narrow() ? 0 : -FRIDGY_HEIGHT * scale * 0.16;
+      const lift = narrow() ? 0.98 : 0.95;
+      head.set(fridgy.root.position.x + side, fridgy.root.position.y + FRIDGY_HEIGHT * scale * lift, 0).project(camera);
+      const x = ((head.x + 1) / 2) * innerWidth;
+      const y = Math.max(((1 - head.y) / 2) * innerHeight, greet.offsetHeight + 96);
+      greet.style.left = `${x}px`;
+      greet.style.top = `${y}px`;
+    }
   });
 
   return fridgy;
+}
+
+const greet = document.querySelector<HTMLElement>(".greet")!;
+const GREETING = "Hello UX Breakfast! 👋 I'm so happy to be here today.";
+const GOODBYE = "Bye! It was so nice to meet you today. Now let me introduce the team 👇";
+
+let saying = "";
+let typing: gsap.core.Tween | null = null;
+let stageName = "hero";
+let introDone = false;
+let teamLine = "";
+
+/** Fridgy says a line in its speech bubble, typed out letter by letter. */
+function say(text: string, delay = 0) {
+  const out = greet.querySelector<HTMLElement>("[data-greet]")!;
+  greet.hidden = false;
+  if (saying === text) return;
+  saying = text;
+  typing?.kill();
+  greet.classList.remove("typed");
+  if (reduce) {
+    out.textContent = text;
+    greet.classList.add("typed");
+    return;
+  }
+  const chars = Array.from(text);
+  const typed = { n: 0 };
+  out.textContent = "";
+  gsap.fromTo(greet.querySelector("p"), { opacity: 0, scale: 0.6, transformOrigin: "85% 100%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)", delay, overwrite: true });
+  typing = gsap.to(typed, {
+    n: chars.length,
+    duration: chars.length * 0.04,
+    ease: "none",
+    delay: delay + 0.25,
+    onUpdate: () => (out.textContent = chars.slice(0, Math.round(typed.n)).join("")),
+    onComplete: () => greet.classList.add("typed"),
+  });
+}
+
+// Fridgy talks on the hero (hello), the closing page (bye) and the team page (introductions)
+function onStage(name: string) {
+  stageName = name;
+  const talks = name === "hero" || name === "closing" || name === "team";
+  // On phones Fridgy steps off stage after the hero, so the team cards carry its lines instead
+  greet.classList.toggle("away", !talks || (narrow() && name !== "hero"));
+  if (name === "hero" && introDone) say(GREETING);
+  if (name === "closing") say(GOODBYE);
+  if (name === "team" && teamLine) say(teamLine);
+}
+
+function initTeam(fridgy: Fridgy | null) {
+  const section = document.querySelector<HTMLElement>(".team")!;
+  const track = section.querySelector<HTMLElement>(".slides-track")!;
+  const slides = Array.from(section.querySelectorAll<HTMLElement>(".slide"));
+  const tabs = section.querySelectorAll<HTMLButtonElement>("[data-go]");
+  // Introduction order: the developers, then the designers, then Fridgy's thank-you
+  const items = Array.from(section.querySelectorAll<HTMLElement>(".member, .thanks"));
+  const slideOf = (el: HTMLElement) => {
+    const slide = el.closest<HTMLElement>(".slide");
+    return slide ? slides.indexOf(slide) : slides.length - 1;
+  };
+  const firstOf = (slide: number) => items.findIndex((el) => slideOf(el) === slide);
+  let current = -1;
+  let pin: ScrollTrigger | null = null;
+  teamLine = items[0].dataset.line!;
+
+  function showSlide(n: number) {
+    track.style.setProperty("--slide", String(n));
+    tabs.forEach((t) => t.setAttribute("aria-selected", String(Number(t.dataset.go) === n)));
+  }
+
+  function activate(i: number) {
+    if (i === current) return;
+    current = i;
+    const el = items[i];
+    items.forEach((m) => m.classList.toggle("active", m === el));
+    showSlide(slideOf(el));
+    teamLine = el.dataset.line!;
+    if (stageName === "team") say(teamLine);
+    // A little cheer when Fridgy thanks everyone at the end
+    if (fridgy && el.classList.contains("thanks") && !reduce) {
+      gsap.timeline().to(fridgy.pose, { celebrate: 1, duration: 0.4 }).to(fridgy.pose, { celebrate: 0, duration: 0.5, delay: 1.6 });
+    }
+  }
+
+  tabs.forEach((tab) =>
+    tab.addEventListener("click", () => {
+      const i = firstOf(Number(tab.dataset.go));
+      if (pin) {
+        // Pinned: jump the scroll to that slide's first introduction
+        scrollTo({ top: pin.start + (pin.end - pin.start) * ((i + 0.5) / items.length), behavior: reduce ? "auto" : "smooth" });
+      } else {
+        activate(i);
+      }
+    }),
+  );
+
+  const mm = gsap.matchMedia();
+  // Desktop: hold the team on screen and let Fridgy introduce one person per scroll step
+  mm.add("(min-width: 821px) and (min-height: 680px) and (prefers-reduced-motion: no-preference)", () => {
+    section.classList.add("team-pinned");
+    pin = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: () => `+=${innerHeight * 0.55 * items.length}`,
+      pin: true,
+      onUpdate: (self) => activate(Math.min(items.length - 1, Math.floor(self.progress * items.length))),
+    });
+    return () => {
+      pin?.kill();
+      pin = null;
+      section.classList.remove("team-pinned");
+    };
+  });
+  // Phones and reduced motion: the tabs switch slides; Fridgy's lines show inside each card
+  mm.add("(max-width: 820px), (max-height: 679px), (prefers-reduced-motion: reduce)", () => {
+    const st = ScrollTrigger.create({ trigger: section, start: "top 60%", once: true, onEnter: () => activate(0) });
+    return () => st.kill();
+  });
+}
+
+// Content that grows after load (the AI demo results, the meal plan toggle) shifts everything below it,
+// so re-measure every scroll trigger when the page height changes
+function keepTriggersFresh() {
+  let timer = 0;
+  let lastHeight = document.body.scrollHeight;
+  new ResizeObserver(() => {
+    const h = document.querySelector("main")!.scrollHeight;
+    if (Math.abs(h - lastHeight) < 2) return;
+    lastHeight = h;
+    clearTimeout(timer);
+    timer = window.setTimeout(() => ScrollTrigger.refresh(), 150);
+  }).observe(document.querySelector("main")!);
+}
+
+// Opening moment: Fridgy pops out with a spin, opens its door with the light on, waves and says hello
+function intro(fridgy: Fridgy, cur: Stage) {
+  if (reduce) {
+    introDone = true;
+    say(GREETING);
+    return;
+  }
+  const target = { s: cur.s, ry: cur.ry, ay: cur.ay };
+  const tl = gsap.timeline({ delay: 0.25 });
+  tl.fromTo(
+    cur,
+    { s: 0.001, ay: target.ay - 0.5, ry: target.ry - Math.PI * 2 },
+    { s: target.s, ay: target.ay, ry: target.ry, duration: 1.4, ease: "back.out(1.5)" },
+  );
+  tl.to(fridgy.pose, { celebrate: 1, duration: 0.35 }, "-=0.45");
+  tl.to(fridgy.extra, { open: 1, duration: 0.55, ease: "back.out(1.6)" }, "-=0.1");
+  tl.call(() => {
+    introDone = true;
+    say(GREETING);
+  });
+  tl.to(fridgy.pose, { celebrate: 0, duration: 0.5 }, "+=0.7");
+  tl.to(fridgy.extra, { open: 0, duration: 0.7, ease: "power2.inOut" }, "+=1.6");
 }
 
 function initDoors() {
@@ -220,6 +397,253 @@ function initChat(fridgy: Fridgy | null) {
   });
 }
 
+// Desktop: pin the screens section and slide the phones sideways as the page scrolls
+function initRail() {
+  const section = document.querySelector<HTMLElement>(".screens")!;
+  const rail = section.querySelector<HTMLElement>(".rail")!;
+  const win = section.querySelector<HTMLElement>(".rail-window")!;
+  const bar = section.querySelector<HTMLElement>(".rail-progress")!;
+  const setProgress = (p: number) => bar.style.setProperty("--progress", String(Math.max(0.14, p)));
+
+  win.addEventListener("scroll", () => {
+    const max = win.scrollWidth - win.clientWidth;
+    if (max > 0) setProgress(win.scrollLeft / max);
+  });
+
+  const mm = gsap.matchMedia();
+  mm.add("(min-width: 821px) and (prefers-reduced-motion: no-preference)", () => {
+    section.classList.add("rail-pinned");
+    const distance = () => Math.max(0, rail.scrollWidth - win.clientWidth);
+    const tween = gsap.to(rail, {
+      x: () => -distance(),
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: () => `+=${distance()}`,
+        pin: true,
+        scrub: 0.5,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => setProgress(self.progress),
+      },
+    });
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+      gsap.set(rail, { clearProps: "transform" });
+      section.classList.remove("rail-pinned");
+    };
+  });
+
+  if (!reduce) {
+    gsap.from(section.querySelectorAll(".phone"), {
+      y: 60,
+      opacity: 0,
+      duration: 0.9,
+      ease: "power3.out",
+      stagger: 0.08,
+      scrollTrigger: { trigger: section, start: "top 75%" },
+    });
+  }
+}
+
+function initPlanner() {
+  const planner = document.querySelector<HTMLElement>(".planner")!;
+  const tabs = planner.querySelectorAll<HTMLButtonElement>("[data-plan]");
+  const views = planner.querySelectorAll<HTMLElement>("[data-view]");
+  tabs.forEach((tab) =>
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+      views.forEach((v) => {
+        const show = v.dataset.view === tab.dataset.plan;
+        v.hidden = !show;
+        if (show && !reduce) gsap.from(v.children, { y: 12, opacity: 0, duration: 0.4, stagger: 0.04 });
+      });
+    }),
+  );
+  if (!reduce) {
+    gsap.from(".way", {
+      y: 50,
+      opacity: 0,
+      duration: 0.9,
+      ease: "power3.out",
+      stagger: 0.15,
+      scrollTrigger: { trigger: ".ways", start: "top 80%" },
+    });
+  }
+}
+
+type Source = "photo" | "receipt" | "voice";
+interface Found {
+  name: string;
+  where: string;
+  qty: string;
+}
+
+const CAPTURE: Record<Source, { upload: string; head: string; extra?: string; items: Found[] }> = {
+  photo: {
+    upload: "Uploading photo",
+    head: "I spotted 5 items in your photo.",
+    items: [
+      { name: "Spinach", where: "Fridge, crisper", qty: "250 g" },
+      { name: "Strawberries", where: "Fridge", qty: "300 g" },
+      { name: "Cucumbers", where: "Fridge, crisper", qty: "4 pcs" },
+      { name: "Milk", where: "Fridge door", qty: "1 L" },
+      { name: "Eggs", where: "Fridge", qty: "6 pcs" },
+    ],
+  },
+  receipt: {
+    upload: "Uploading receipt",
+    head: "I read 4 items from your receipt.",
+    extra: "Spent 330 EGP. It's counted in your monthly insights.",
+    items: [
+      { name: "Tomatoes", where: "Fridge", qty: "1 kg" },
+      { name: "Chicken breast", where: "Freezer, suggested", qty: "1 kg" },
+      { name: "Greek yogurt", where: "Fridge", qty: "2 pcs" },
+      { name: "Basmati rice", where: "Pantry", qty: "1 kg" },
+    ],
+  },
+  voice: {
+    upload: "Listening",
+    head: "Got it! I heard 3 items.",
+    items: [
+      { name: "Tomatoes", where: "Fridge", qty: "1 kg" },
+      { name: "Cucumbers", where: "Fridge, crisper", qty: "2 pcs" },
+      { name: "White cheese", where: "Fridge", qty: "1 box" },
+    ],
+  },
+};
+
+// Fridgy AI demo: the user picks photo, receipt or voice, the AI "analyses" it and proposes items
+function initCapture(fridgy: Fridgy | null) {
+  const root = document.querySelector<HTMLElement>(".capture")!;
+  const tabs = root.querySelectorAll<HTMLButtonElement>("[data-src]");
+  const panels = root.querySelectorAll<HTMLElement>("[data-panel]");
+  const steps = root.querySelectorAll<HTMLElement>(".pipeline li");
+  const uploadLabel = root.querySelector<HTMLElement>("[data-label]")!;
+  const result = root.querySelector<HTMLElement>(".result")!;
+  const head = root.querySelector<HTMLElement>("[data-result-head]")!;
+  const list = root.querySelector<HTMLElement>("[data-result-items]")!;
+  const extra = root.querySelector<HTMLElement>("[data-result-extra]")!;
+  const confirm = root.querySelector<HTMLButtonElement>("[data-capture-confirm]")!;
+  const done = root.querySelector<HTMLElement>("[data-capture-done]")!;
+  const transcript = root.querySelector<HTMLElement>(".transcript")!;
+  const fullTranscript = transcript.textContent ?? "";
+  let tl: gsap.core.Timeline | null = null;
+
+  const setStep = (i: number) =>
+    steps.forEach((li, n) => {
+      li.classList.toggle("on", n <= i);
+      li.classList.toggle("now", n === i && i < steps.length - 1);
+    });
+
+  function renderItems(src: Source) {
+    list.replaceChildren(
+      ...CAPTURE[src].items.map((item) => {
+        const li = document.createElement("li");
+        const name = document.createElement("span");
+        name.textContent = item.name;
+        const where = document.createElement("small");
+        where.textContent = item.where;
+        name.append(where);
+        const qty = document.createElement("span");
+        qty.textContent = item.qty;
+        li.append(name, qty);
+        return li;
+      }),
+    );
+  }
+
+  function run(src: Source) {
+    tl?.kill();
+    const data = CAPTURE[src];
+    tabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.src === src)));
+    panels.forEach((p) => (p.hidden = p.dataset.panel !== src));
+    const panel = root.querySelector<HTMLElement>(`[data-panel="${src}"]`)!;
+    const scan = panel.querySelector<HTMLElement>(".scanline");
+    const boxes = panel.querySelectorAll<HTMLElement>(".box");
+    const lines = panel.querySelectorAll<HTMLElement>(".receipt li");
+    const voice = panel.querySelector<HTMLElement>(".voice");
+
+    uploadLabel.textContent = data.upload;
+    head.textContent = "Analysing…";
+    list.replaceChildren();
+    extra.hidden = true;
+    result.classList.remove("ready");
+    confirm.disabled = false;
+    confirm.textContent = `Confirm and add ${data.items.length} items`;
+    done.hidden = true;
+    gsap.set(boxes, { opacity: 0, scale: 1.15 });
+    lines.forEach((l) => l.classList.remove("hit"));
+    if (scan) gsap.set(scan, { top: "-22%", opacity: 0 });
+    if (voice) {
+      voice.classList.add("live");
+      transcript.textContent = "";
+    }
+
+    const instant = reduce;
+    tl = gsap.timeline();
+    tl.call(() => setStep(0));
+    tl.from(panel, { opacity: 0, y: 10, duration: instant ? 0 : 0.35 });
+
+    if (src === "voice") {
+      const words = fullTranscript.split(" ");
+      words.forEach((_, i) => {
+        tl!.call(() => (transcript.textContent = words.slice(0, i + 1).join(" ")), [], instant ? 0 : `+=${i === 0 ? 0.3 : 0.28}`);
+      });
+      tl.call(() => {
+        voice!.classList.remove("live");
+        setStep(1);
+      }, [], instant ? 0 : "+=0.3");
+    } else {
+      tl.call(() => setStep(1), [], instant ? 0 : "+=0.3");
+      if (scan && !instant) {
+        tl.to(scan, { opacity: 1, duration: 0.15 });
+        tl.to(scan, { top: "100%", duration: 1.3, ease: "power1.inOut" });
+        tl.to(scan, { opacity: 0, duration: 0.2 });
+      }
+      if (boxes.length) tl.to(boxes, { opacity: 1, scale: 1, duration: instant ? 0 : 0.3, stagger: instant ? 0 : 0.15, ease: "back.out(2)" }, instant ? 0 : "-=1.1");
+      lines.forEach((line, i) => tl!.call(() => line.classList.add("hit"), [], instant ? 0 : i === 0 ? "-=1.2" : "+=0.25"));
+    }
+
+    tl.call(() => {
+      setStep(2);
+      head.textContent = data.head;
+      renderItems(src);
+      if (data.extra) {
+        extra.textContent = data.extra;
+        extra.hidden = false;
+      }
+    }, [], instant ? 0 : "+=0.35");
+    if (!instant) tl.from(() => list.children, { opacity: 0, x: -12, duration: 0.3, stagger: 0.1 });
+    tl.call(() => {
+      setStep(3);
+      result.classList.add("ready");
+    });
+  }
+
+  tabs.forEach((t) => t.addEventListener("click", () => run(t.dataset.src as Source)));
+
+  confirm.addEventListener("click", () => {
+    confirm.disabled = true;
+    confirm.textContent = "Added";
+    done.hidden = false;
+    if (!fridgy) return;
+    const cycle = gsap.timeline({ defaults: { duration: reduce ? 0 : 0.6, ease: "power2.out" } });
+    cycle.to(fridgy.extra, { open: 1 }).to(fridgy.extra, { open: 0, delay: reduce ? 0 : 0.6 });
+  });
+
+  // Plays the photo demo once, the first time the section scrolls into view
+  ScrollTrigger.create({ trigger: root, start: "top 70%", once: true, onEnter: () => run("photo") });
+  setStep(-1);
+}
+
+// The pin is created first so the scroll-driven Fridgy states below measure the pinned spacing
+initRail();
 const fridgy = initStage();
 initDoors();
 initChat(fridgy);
+initPlanner();
+initCapture(fridgy);
+initTeam(fridgy);
+keepTriggersFresh();
