@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fridgy: your food, smarter</title>
+    <meta name="description" content="Fridgy remembers what's in your fridge, warns you before food spoils, and suggests what to cook with what you already have." />
+    <meta name="theme-color" content="#FFFAF0" />
+    <link rel="icon" href="/img/views/front.webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <canvas id="stage" aria-hidden="true"></canvas>
+    <img class="stage-fallback" src="/img/views/three-quarter.webp" alt="" hidden />
+
+    <header class="topbar">
+      <a class="brand" href="#top">Fridgy</a>
+      <nav aria-label="Sections">
+        <a href="#story">Story</a>
+        <a href="#problem">Problem</a>
+        <a href="#how">How it works</a>
+        <a href="#customers">Customers</a>
+        <a href="#business">Business model</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="chapter hero" data-state="hero">
+        <div class="copy">
+          <h1>What if your fridge could remember everything for you?</h1>
+          <p class="lede">Fridgy keeps track of the food you have, warns you before it spoils, and helps you decide what to cook. You just tell it what you bought.</p>
+          <div class="hero-actions">
+            <a class="button" href="#story">Read Sara's story</a>
+            <p class="note">Works in English and Egyptian Arabic</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="story" data-state="opening">
+        <div class="copy">
+          <h2>Sara stops at the supermarket</h2>
+          <p>On her way home from work, Sara picks up a few things: milk, eggs, vegetables and chicken.</p>
+          <p>She gets home and opens the fridge to put everything away. That's when she sees she already had milk and eggs, and a bag of vegetables she'd forgotten about since last week.</p>
+        </div>
+        <figure class="door">
+          <img src="/img/story/01-groceries.webp" alt="Sara walks into her kitchen carrying a bag of groceries while Fridgy waves hello." loading="lazy" width="1100" height="1100" />
+        </figure>
+      </section>
+
+      <section class="chapter flip" data-state="discovery">
+        <div class="copy">
+          <h2>Some of it had to go in the bin</h2>
+          <p>The worst part? Some of those vegetables had already gone bad and had to be thrown away.</p>
+          <p>It isn't the first time this has happened to Sara, and it won't be the last.</p>
+          <p class="aside">So why does it keep happening?</p>
+        </div>
+        <figure class="door">
+          <img src="/img/story/03-forgotten-food.webp" alt="Sara crouches in front of the open fridge, staring at forgotten vegetables that have spoiled." loading="lazy" width="1100" height="1100" />
+        </figure>
+      </section>
+
+      <section class="chapter" data-state="problem">
+        <div class="copy">
+          <h2>The food we forget</h2>
+          <p>The problem isn't only that we buy too much. It's that we don't always remember what we have, what's about to go off, and what we actually need.</p>
+          <ul class="questions">
+            <li>"What are we eating today?"</li>
+            <li>"Do we have any tomatoes?"</li>
+            <li>"Is the milk still good?"</li>
+          </ul>
+          <p>The same questions, every single day.</p>
+        </div>
+        <figure class="door">
+          <img src="/img/story/02-busy-life.webp" alt="Sara sits at her laptop looking tired while a worried Fridgy holds its door open." loading="lazy" width="1100" height="1100" />
+        </figure>
+      </section>
+
+      <section class="chapter solo" id="problem" data-state="numbers">
+        <div class="copy wide">
+          <h2>Food waste starts at home</h2>
+          <p>Sara isn't alone. Most of the food the world throws away is thrown away in our own kitchens.</p>
+          <dl class="stats">
+            <div><dt>1.05 billion tonnes</dt><dd>of food wasted worldwide in 2022</dd></div>
+            <div><dt>60%</dt><dd>of that waste happens in households</dd></div>
+            <div><dt>79 kg</dt><dd>wasted at home per person, every year</dd></div>
+            <div><dt>1 billion meals</dt><dd>thrown away by households every day</dd></div>
+          </dl>
+          <p>Food loss and waste also produce 8 to 10% of global greenhouse gas emissions.</p>
+          <h3>Why it keeps happening</h3>
+          <ul class="causes">
+            <li><strong>We forget what's inside.</strong> So we buy milk and eggs we already have.</li>
+            <li><strong>We can't see what's expiring.</strong> Vegetables go bad at the back of the shelf.</li>
+            <li><strong>Tracking feels like admin.</strong> Spreadsheets and long forms get abandoned in a week.</li>
+          </ul>
+          <p class="source">Source: <a href="https://www.unep.org/resources/publication/food-waste-index-report-2024">UNEP Food Waste Index Report 2024</a></p>
+        </div>
+      </section>
+
+      <section class="chapter flip" id="how" data-state="meet">
+        <div class="copy">
+          <h2>Meet Fridgy</h2>
+          <p>Fridgy remembers what's in your fridge, tells you what's about to expire, keeps track of what you need to buy, and suggests what to cook today.</p>
+          <ul class="nots">
+            <li>No spreadsheets.</li>
+            <li>No long forms for every item.</li>
+          </ul>
+          <p>You talk to Fridgy, and it keeps everything organized.</p>
+        </div>
+        <figure class="door">
+          <img src="/img/story/04-app-help.webp" alt="Sara smiles and shows the Fridgy app on her phone while Fridgy points at it." loading="lazy" width="1100" height="1100" />
+        </figure>
+      </section>
+
+      <section class="chapter solo" data-state="tell">
+        <div class="copy">
+          <h2>Just tell Fridgy</h2>
+          <p>Back to Sara. This time, when she gets home from the supermarket, she opens Fridgy and taps the assistant. She can type it or say it, in English or Egyptian Arabic.</p>
+
+          <div class="chat" aria-live="polite">
+            <div class="chat-head">
+              <strong>Fridgy AI</strong>
+              <span>Your smart kitchen companion</span>
+            </div>
+            <div class="modes" role="group" aria-label="Assistant mode">
+              <span class="mode" data-mode="add" aria-current="true">Add Food</span>
+              <span class="mode" data-mode="use">Use Food</span>
+            </div>
+
+            <p class="bubble sara">I bought a kilo of chicken, two cartons of milk and 6 eggs.</p>
+            <div class="bubble fridgy" data-panel="add">
+              <p>Got it! I found 3 items to add to your fridge.</p>
+              <ul class="items">
+                <li><span>Chicken<small>Fridge, suggested</small></span><span>1 kg</span></li>
+                <li><span>Milk<small>Fridge door, suggested</small></span><span>2 cartons</span></li>
+                <li><span>Eggs<small>Fridge, suggested</small></span><span>6 pcs</span></li>
+              </ul>
+              <button class="button small" type="button" data-step="add">Confirm Add 3 Items</button>
+              <p class="done" hidden>All added! Your fridge is up to date.</p>
+            </div>
+
+            <p class="bubble sara later" data-later hidden>I used half a kilo of chicken and 3 tomatoes.</p>
+            <div class="bubble fridgy later" data-later hidden>
+              <p>Sounds delicious! Here's what will remain after lunch.</p>
+              <ul class="items">
+                <li><span>Chicken<small>Before 1 kg, used 500 g</small></span><span>500 g</span></li>
+                <li><span>Tomatoes<small>Before 5 pcs, used 3 pcs</small></span><span>2 pcs</span></li>
+              </ul>
+              <button class="button small" type="button" data-step="use">Confirm Usage</button>
+              <p class="done" hidden>Done! Your fridge is all caught up.</p>
+            </div>
+          </div>
+
+          <p>Nothing changes until Sara confirms. Fridgy never guesses an expiry date she didn't give it, and it asks when something is missing.</p>
+        </div>
+      </section>
+
+      <section class="chapter" data-state="cook">
+        <div class="copy">
+          <h2>Dinner, decided</h2>
+          <p>Fridgy suggests recipes Sara can make with what she already has. It also noticed the spinach needs using soon, so the recipe that uses it comes first.</p>
+          <ol class="recipes">
+            <li><strong>Chicken and spinach stir-fry</strong><span>Uses the spinach before it spoils</span></li>
+            <li><strong>Shakshuka</strong><span>Eggs, tomatoes and peppers you already have</span></li>
+            <li><strong>Creamy tomato pasta</strong><span>Ready in 20 minutes</span></li>
+          </ol>
+          <p class="aside">Sara used to ask what she had. Now Fridgy helps her decide what to make with it.</p>
+        </div>
+        <figure class="door">
+          <img src="/img/story/05-happy-meal.webp" alt="Sara happily stirs a big bowl of salad next to Fridgy, whose shelves are neatly stocked." loading="lazy" width="1100" height="1100" />
+        </figure>
+      </section>
+
+      <section class="chapter solo" data-state="lifestyle">
+        <div class="copy">
+          <h2>Your food, your lifestyle</h2>
+          <p>When you start, Fridgy gets to know you, so its suggestions fit you instead of being random recipes.</p>
+          <dl class="profile">
+            <div><dt>What do you love to eat?</dt><dd>Pasta, grilled chicken</dd></div>
+            <div><dt>Anything you don't like?</dt><dd>Mushrooms</dd></div>
+            <div><dt>Any allergies?</dt><dd>Peanuts</dd></div>
+            <div><dt>Do you work out?</dt><dd>Yes, 3 times a week</dd></div>
+          </dl>
+          <p>It can also keep your shopping list and remind you at the right time.</p>
+          <ul class="reminders">
+            <li>Milk is running low. Added to your shopping list.</li>
+            <li>Use the spinach by tomorrow.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter solo" data-state="kitchen">
+        <div class="copy">
+          <h2>One app for the whole kitchen</h2>
+          <ul class="features">
+            <li><strong>Scan your groceries</strong><span>Point the camera at your shopping, review what it found, then save.</span></li>
+            <li><strong>Expiring soon</strong><span>See what needs using first, before it goes in the bin.</span></li>
+            <li><strong>Cook with what you have</strong><span>Recipe ideas from your fridge, with guided cooking step by step.</span></li>
+            <li><strong>Plan the week</strong><span>Add meals to a weekly planner and see what's missing.</span></li>
+            <li><strong>Smart shopping list</strong><span>Buy only what you need, then move it straight into your fridge.</span></li>
+            <li><strong>A shared kitchen</strong><span>Invite your household so everyone sees the same fridge.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter solo impact" data-state="impact">
+        <div class="copy">
+          <h2 class="saves"><span>Save food.</span> <span>Save money.</span> <span>Save time.</span></h2>
+          <p>Fewer forgotten groceries means less waste, fewer duplicate purchases and fewer evenings spent wondering what's for dinner. Fridgy shows your monthly impact, so you can watch small changes add up to more sustainable habits.</p>
+        </div>
+      </section>
+
+      <section class="chapter solo" id="customers" data-state="customers">
+        <div class="copy wide">
+          <h2>Who Fridgy is for</h2>
+          <p>We're starting with urban households in Egypt, in English and Egyptian Arabic. These are the people who feel the problem most.</p>
+          <ul class="segments">
+            <li>
+              <strong>Busy professionals</strong>
+              <span>Like Sara. They shop on the way home, have no time to plan, and forget what's already in the fridge.</span>
+            </li>
+            <li>
+              <strong>Families and shared homes</strong>
+              <span>Several people shop for one fridge, so the same things get bought twice. Fridgy keeps one shared list for the whole household.</span>
+            </li>
+            <li>
+              <strong>Health and fitness focused</strong>
+              <span>They train several times a week, follow a diet or avoid allergens, and want meals that fit their goals.</span>
+            </li>
+            <li>
+              <strong>Students and young couples</strong>
+              <span>A first kitchen and a tight grocery budget. Every wasted item hurts, and they're still learning what to cook.</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter solo" id="business" data-state="business">
+        <div class="copy wide">
+          <h2>How Fridgy makes money</h2>
+          <p>Fridgy is free to start, so every household can stop wasting food. Revenue grows as people plan, shop and cook through the app.</p>
+          <ul class="streams">
+            <li><strong>Fridgy Plus subscription</strong><span>A monthly or yearly plan for households that want planning, sharing and unlimited AI.</span></li>
+            <li><strong>Grocery partner commissions</strong><span>Sara orders her smart shopping list from delivery partners in one tap. Fridgy earns a referral fee, and she pays nothing extra.</span></li>
+            <li><strong>Sponsored recipes</strong><span>Food brands can feature recipes. They're always labeled, and only shown when they fit the user's tastes and allergies.</span></li>
+            <li><strong>Retail insights, later</strong><span>Aggregated, anonymous, opt-in demand trends for grocers. Never personal data.</span></li>
+          </ul>
+          <div class="plans">
+            <section class="plan">
+              <h3>Free</h3>
+              <ul>
+                <li>Track what's in your fridge</li>
+                <li>Expiry reminders</li>
+                <li>Recipe ideas from what you have</li>
+                <li>Add food by chat</li>
+              </ul>
+            </section>
+            <section class="plan plus">
+              <h3>Fridgy Plus</h3>
+              <ul>
+                <li>Everything in Free</li>
+                <li>Unlimited AI scans and voice</li>
+                <li>Weekly meal planner</li>
+                <li>Smart shopping list</li>
+                <li>Shared household</li>
+                <li>Monthly savings and waste insights</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter solo closing" data-state="closing">
+        <div class="copy">
+          <p>At the start of the story, Sara opened the fridge and asked:</p>
+          <p class="before">"What do I have?"</p>
+          <p>After Fridgy, the question changed:</p>
+          <p class="question">"What can I make with what I have?"</p>
+          <p>We're not building another app that logs food. We're building a smart assistant that makes managing food at home easier, saves time and money, and helps cut waste.</p>
+          <blockquote>Because sometimes, the smartest way to save food isn't buying less. It's making better use of what you already have.</blockquote>
+          <h2 class="signoff">Meet Fridgy.<br />Your food. Smarter.</h2>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <p class="brand">Fridgy</p>
+        <p>Your food. Smarter.</p>
+      </div>
+      <nav aria-label="Footer">
+        <a href="#story">Story</a>
+        <a href="#problem">Problem</a>
+        <a href="#how">How it works</a>
+        <a href="#customers">Customers</a>
+        <a href="#business">Business model</a>
+      </nav>
+      <p class="legal">© 2026 Fridgy. Food waste figures from the UNEP Food Waste Index Report 2024.</p>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
