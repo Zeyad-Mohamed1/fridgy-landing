@@ -6,7 +6,7 @@
     <title>Fridgy: your food, smarter</title>
     <meta name="description" content="Fridgy remembers what's in your fridge, warns you before food spoils, and suggests what to cook with what you already have." />
     <meta name="theme-color" content="#FFFAF0" />
-    <link rel="icon" href="/img/views/front.webp" />
+    <link rel="icon" type="image/svg+xml" href="/img/brand/logo.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet" />
@@ -14,15 +14,20 @@
   <body>
     <canvas id="stage" aria-hidden="true"></canvas>
     <img class="stage-fallback" src="/img/views/three-quarter.webp" alt="" hidden />
+    <div class="greet" role="status" aria-live="polite" hidden>
+      <p><span data-greet></span><span class="caret" aria-hidden="true"></span></p>
+    </div>
 
     <header class="topbar">
-      <a class="brand" href="#top">Fridgy</a>
+      <a class="brand" href="#top"><img src="/img/brand/logo.svg" alt="" width="40" height="41" />Fridgy</a>
       <nav aria-label="Sections">
         <a href="#story">Story</a>
         <a href="#problem">Problem</a>
         <a href="#how">How it works</a>
+        <a href="#app">The app</a>
         <a href="#customers">Customers</a>
         <a href="#business">Business model</a>
+        <a href="#team">Team</a>
       </nav>
     </header>
 
@@ -156,6 +161,88 @@
         </div>
       </section>
 
+      <section class="chapter solo" id="ai" data-state="snap">
+        <div class="copy">
+          <p class="eyebrow">Fridgy AI</p>
+          <h2>Snap it, scan it or say it</h2>
+          <p>Typing is optional. In the Fridgy AI chat, Sara can tap the camera to photograph her groceries or upload a receipt, or tap the mic and just talk. Fridgy's AI analyses it and turns it into a list of items, ready to add.</p>
+
+          <div class="capture">
+            <div class="capture-tabs" role="tablist" aria-label="How to add food">
+              <button type="button" role="tab" aria-selected="true" data-src="photo">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                Photo
+              </button>
+              <button type="button" role="tab" aria-selected="false" data-src="receipt">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v18l2.5-1.5L10 21l2-1.5 2 1.5 2.5-1.5L19 21V3l-2.5 1.5L14 3l-2 1.5L10 3 7.5 4.5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>
+                Receipt
+              </button>
+              <button type="button" role="tab" aria-selected="false" data-src="voice">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg>
+                Voice
+              </button>
+            </div>
+
+            <div class="capture-stage">
+              <div class="input-panel" data-panel="photo">
+                <div class="photo">
+                  <img src="/img/app/groceries-photo.webp" alt="A photo of groceries on a table: a bowl of spinach, strawberries, a bottle of milk, a box of eggs and cucumbers." width="848" height="809" loading="lazy" />
+                  <span class="box" style="left: 0.5%; top: 14%; width: 34%; height: 38%"><i>Spinach</i></span>
+                  <span class="box" style="left: 37%; top: 3%; width: 33%; height: 36%"><i>Strawberries</i></span>
+                  <span class="box" style="left: 71%; top: 16%; width: 28.5%; height: 53%"><i>Cucumbers</i></span>
+                  <span class="box" style="left: 26%; top: 41%; width: 23%; height: 55%"><i>Milk</i></span>
+                  <span class="box" style="left: 53%; top: 48%; width: 25%; height: 35%"><i>Eggs</i></span>
+                  <span class="scanline" aria-hidden="true"></span>
+                </div>
+              </div>
+
+              <div class="input-panel" data-panel="receipt" hidden>
+                <div class="receipt">
+                  <p class="receipt-store">Corner Market</p>
+                  <p class="receipt-meta">31 Oct 2026 · 18:42</p>
+                  <ul>
+                    <li><span>Tomatoes 1 kg</span><span>18.00</span></li>
+                    <li><span>Chicken breast 1 kg</span><span>210.00</span></li>
+                    <li><span>Greek yogurt x2</span><span>60.00</span></li>
+                    <li><span>Basmati rice 1 kg</span><span>42.00</span></li>
+                  </ul>
+                  <p class="receipt-total"><span>Total</span><span>330.00 EGP</span></p>
+                  <span class="scanline" aria-hidden="true"></span>
+                </div>
+              </div>
+
+              <div class="input-panel" data-panel="voice" hidden>
+                <div class="voice">
+                  <span class="mic" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4M8 21h8"/></svg>
+                  </span>
+                  <span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <p class="transcript" lang="ar" dir="rtl">جبت كيلو طماطم و٢ خيار وعلبة جبنة بيضا</p>
+                  <p class="translation">"I got a kilo of tomatoes, 2 cucumbers and a box of white cheese."</p>
+                </div>
+              </div>
+            </div>
+
+            <ol class="pipeline" aria-label="What Fridgy's AI does">
+              <li data-step="0"><span data-label>Uploading photo</span></li>
+              <li data-step="1"><span>Analysing with AI</span></li>
+              <li data-step="2"><span>Matching your fridge</span></li>
+              <li data-step="3"><span>Ready to review</span></li>
+            </ol>
+
+            <div class="result" aria-live="polite">
+              <p class="result-head" data-result-head></p>
+              <ul class="items" data-result-items></ul>
+              <p class="result-extra" data-result-extra hidden></p>
+              <button class="button small" type="button" data-capture-confirm>Confirm and add</button>
+              <p class="done" data-capture-done hidden>Added to your fridge.</p>
+            </div>
+          </div>
+
+          <p class="aside">Fridgy never saves anything on its own. Sara reviews what the AI found, fixes anything it got wrong, and confirms.</p>
+        </div>
+      </section>
+
       <section class="chapter" data-state="cook">
         <div class="copy">
           <h2>Dinner, decided</h2>
@@ -204,6 +291,65 @@
         </div>
       </section>
 
+      <section class="chapter full screens" id="app" data-state="screens">
+        <div class="screens-head">
+          <div>
+            <p class="eyebrow">Inside the app</p>
+            <h2>What Fridgy does, screen by screen</h2>
+            <p>These are real screens from the Fridgy app. Scroll through them to see the whole loop: know what you have, use it in time, and buy only what you need.</p>
+          </div>
+          <div class="rail-nav" aria-hidden="true">
+            <span class="rail-progress"><span></span></span>
+          </div>
+        </div>
+        <div class="rail-window">
+          <ol class="rail">
+            <li class="shot">
+              <figure class="phone"><img src="/img/app/home.webp" alt="Fridgy home screen: a greeting, 24 items in the kitchen, 5 expiring soon, and quick actions to scan food, add an item, cook with AI and open the meal planner." width="600" height="1304" loading="lazy" /></figure>
+              <span class="shot-num">01</span>
+              <h3>Your kitchen at a glance</h3>
+              <p>How many items you have, what's expiring soon, and one tap to scan, add, cook with AI or plan meals.</p>
+            </li>
+            <li class="shot">
+              <figure class="phone"><img src="/img/app/my_fridge.webp" alt="My Fridge screen listing 20 active items across fridge, freezer and pantry, with the items to use soon at the top." width="600" height="1304" loading="lazy" /></figure>
+              <span class="shot-num">02</span>
+              <h3>Everything you own, in one place</h3>
+              <p>Fridge, freezer and pantry, filtered by category and sorted so what needs using comes first.</p>
+            </li>
+            <li class="shot">
+              <figure class="phone"><img src="/img/app/expiring.webp" alt="Expiring Soon screen listing baby spinach, chicken breast, strawberries, white cheese and fresh milk with their use-by dates." width="600" height="1304" loading="lazy" /></figure>
+              <span class="shot-num">03</span>
+              <h3>Use it before you lose it</h3>
+              <p>A clear list of what's about to go off, soonest date first, so nothing gets forgotten at the back of the shelf.</p>
+            </li>
+            <li class="shot">
+              <figure class="phone"><img src="/img/app/fridge_ai.webp" alt="Fridgy AI assistant screen with Add Food and Use Food modes and a message box with camera and microphone buttons." width="600" height="1304" loading="lazy" /></figure>
+              <span class="shot-num">04</span>
+              <h3>Just tell Fridgy</h3>
+              <p>Type it, say it or snap it. Fridgy turns "I bought chicken and milk" into fridge items, and updates them as you cook.</p>
+            </li>
+            <li class="shot">
+              <figure class="phone"><img src="/img/app/add_food.webp" alt="Add Food screen offering three ways to add groceries: scan food, take a photo, or add manually." width="600" height="1304" loading="lazy" /></figure>
+              <span class="shot-num">05</span>
+              <h3>Add food your way</h3>
+              <p>Scan your groceries, take a photo, or type the details. You always review before anything is saved.</p>
+            </li>
+            <li class="shot">
+              <figure class="phone"><img src="/img/app/shopping.webp" alt="Shopping list screen with items to tick off, a Store tab and a Complete purchase button." width="600" height="1304" loading="lazy" /></figure>
+              <span class="shot-num">06</span>
+              <h3>A shopping list that knows your fridge</h3>
+              <p>Tick off what you bought and move it straight into your fridge, or order it from a store in the app.</p>
+            </li>
+            <li class="shot">
+              <figure class="phone"><img src="/img/app/profile_setup.webp" alt="Profile setup screen asking how many people you are cooking for, step 1 of 7." width="600" height="1304" loading="lazy" /></figure>
+              <span class="shot-num">07</span>
+              <h3>It gets to know you</h3>
+              <p>A short setup at sign-up: who you cook for, what you love, your diet, allergies and workouts. Every suggestion starts here.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
       <section class="chapter solo impact" data-state="impact">
         <div class="copy">
           <h2 class="saves"><span>Save food.</span> <span>Save money.</span> <span>Save time.</span></h2>
@@ -236,38 +382,124 @@
         </div>
       </section>
 
-      <section class="chapter solo" id="business" data-state="business">
-        <div class="copy wide">
+      <section class="chapter full money" id="business" data-state="business">
+        <div class="money-head">
+          <p class="eyebrow">Business model</p>
           <h2>How Fridgy makes money</h2>
-          <p>Fridgy is free to start, so every household can stop wasting food. Revenue grows as people plan, shop and cook through the app.</p>
-          <ul class="streams">
-            <li><strong>Fridgy Plus subscription</strong><span>A monthly or yearly plan for households that want planning, sharing and unlimited AI.</span></li>
-            <li><strong>Grocery partner commissions</strong><span>Sara orders her smart shopping list from delivery partners in one tap. Fridgy earns a referral fee, and she pays nothing extra.</span></li>
-            <li><strong>Sponsored recipes</strong><span>Food brands can feature recipes. They're always labeled, and only shown when they fit the user's tastes and allergies.</span></li>
-            <li><strong>Retail insights, later</strong><span>Aggregated, anonymous, opt-in demand trends for grocers. Never personal data.</span></li>
-          </ul>
-          <div class="plans">
-            <section class="plan">
-              <h3>Free</h3>
-              <ul>
-                <li>Track what's in your fridge</li>
-                <li>Expiry reminders</li>
-                <li>Recipe ideas from what you have</li>
-                <li>Add food by chat</li>
+          <p>Fridgy is free to start, so any household can stop wasting food. Revenue comes from two places, and both grow as people shop and cook through the app.</p>
+        </div>
+
+        <div class="ways">
+          <article class="way">
+            <div class="way-copy">
+              <span class="way-num">01</span>
+              <h3>A commission on every grocery order</h3>
+              <p>We integrate with grocery stores and delivery partners. Fridgy already knows what's running low, so a shopping list turns into an order in one tap. The partner store pays Fridgy a percentage of every order placed through the app.</p>
+              <ol class="flow">
+                <li><strong>Fridgy spots it</strong><span>Milk is running low, so it goes on the shopping list.</span></li>
+                <li><strong>Sara orders</strong><span>She picks a partner store in the Store tab and checks out.</span></li>
+                <li><strong>The store delivers</strong><span>The order arrives and moves straight into her fridge.</span></li>
+                <li class="earn"><strong>Fridgy earns</strong><span>The store pays a percentage of the order total.</span></li>
+              </ol>
+              <ul class="wins">
+                <li><strong>Stores</strong> get ready-to-buy customers who already know what they need.</li>
+                <li><strong>Users</strong> pay nothing extra and skip the duplicate purchases.</li>
               </ul>
-            </section>
-            <section class="plan plus">
-              <h3>Fridgy Plus</h3>
-              <ul>
-                <li>Everything in Free</li>
-                <li>Unlimited AI scans and voice</li>
-                <li>Weekly meal planner</li>
-                <li>Smart shopping list</li>
-                <li>Shared household</li>
-                <li>Monthly savings and waste insights</li>
-              </ul>
-            </section>
-          </div>
+            </div>
+            <figure class="phone small"><img src="/img/app/shopping.webp" alt="The Fridgy shopping list, with a Store tab for ordering from partner stores." width="600" height="1304" loading="lazy" /></figure>
+          </article>
+
+          <article class="way dark">
+            <div class="way-copy">
+              <span class="way-num">02</span>
+              <h3>AI meal plans, by the week or the month</h3>
+              <p>Paid plans where Fridgy's AI plans your meals for the whole week or month. Every plan is built from two things Fridgy already knows, so it fits your fridge and your life instead of being random recipes.</p>
+
+              <div class="sources">
+                <div class="source-card">
+                  <p class="source-label">What's in your fridge</p>
+                  <ul>
+                    <li>Items and quantities</li>
+                    <li>Expiry dates, so food that's about to go off gets used first</li>
+                  </ul>
+                  <p class="source-from">From the AI chat, scans and receipts</p>
+                </div>
+                <div class="source-card">
+                  <p class="source-label">Who you are</p>
+                  <ul>
+                    <li>How many people you cook for</li>
+                    <li>Favorite foods and your diet</li>
+                    <li>Allergies and ingredients to avoid</li>
+                    <li>How often you work out</li>
+                  </ul>
+                  <p class="source-from">From the persona you fill in at registration</p>
+                </div>
+              </div>
+              <p class="arrow-down" aria-hidden="true">AI plan</p>
+            </div>
+
+            <div class="planner" aria-label="Example AI meal plan for Sara">
+              <div class="planner-head">
+                <div>
+                  <strong>Sara's plan</strong>
+                  <span>Cooks for 2 · loves pasta · no peanuts · trains 3x a week</span>
+                </div>
+                <div class="toggle" role="tablist" aria-label="Plan length">
+                  <button type="button" role="tab" aria-selected="true" data-plan="week">Week</button>
+                  <button type="button" role="tab" aria-selected="false" data-plan="month">Month</button>
+                </div>
+              </div>
+              <ol class="days" data-view="week">
+                <li><b>Sat</b><span>Chicken and spinach stir-fry</span><em class="tag use">Uses spinach first</em></li>
+                <li><b>Sun</b><span>Shakshuka with peppers</span><em class="tag">From your fridge</em></li>
+                <li><b>Mon</b><span>Grilled chicken and rice bowl</span><em class="tag fit">Training day</em></li>
+                <li><b>Tue</b><span>Creamy tomato pasta</span><em class="tag">From your fridge</em></li>
+                <li><b>Wed</b><span>Lentil soup and salad</span><em class="tag buy">+2 to buy</em></li>
+                <li><b>Thu</b><span>Baked fish with vegetables</span><em class="tag fit">Training day</em></li>
+                <li><b>Fri</b><span>Koshari for the family</span><em class="tag buy">+1 to buy</em></li>
+              </ol>
+              <ol class="weeks" data-view="month" hidden>
+                <li><b>Week 1</b><span>Use up what's in the fridge now</span><em>7 meals · 2 items to buy</em></li>
+                <li><b>Week 2</b><span>High-protein week around 3 workouts</span><em>7 meals · 5 items to buy</em></li>
+                <li><b>Week 3</b><span>Egyptian classics, batch-cooked</span><em>7 meals · 4 items to buy</em></li>
+                <li><b>Week 4</b><span>Quick 20-minute dinners</span><em>7 meals · 3 items to buy</em></li>
+              </ol>
+              <p class="planner-foot">Missing ingredients go to the shopping list, ready to order from a partner store, so both revenue streams feed each other.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="plans">
+          <section class="plan">
+            <h3>Free</h3>
+            <p class="plan-sub">Stop wasting food</p>
+            <ul>
+              <li>Track what's in your fridge</li>
+              <li>Expiry reminders</li>
+              <li>Add food by chat</li>
+              <li>Smart shopping list and store orders</li>
+            </ul>
+          </section>
+          <section class="plan">
+            <h3>Weekly plan</h3>
+            <p class="plan-sub">Subscription, billed weekly</p>
+            <ul>
+              <li>Everything in Free</li>
+              <li>An AI meal plan for the next 7 days</li>
+              <li>Built from your fridge and your persona</li>
+              <li>Missing items added to your list</li>
+            </ul>
+          </section>
+          <section class="plan plus">
+            <h3>Monthly plan</h3>
+            <p class="plan-sub">Subscription, billed monthly</p>
+            <ul>
+              <li>Everything in Weekly</li>
+              <li>A full month of meals, planned week by week</li>
+              <li>Plans that adapt to your workouts and goals</li>
+              <li>Monthly savings and waste insights</li>
+            </ul>
+          </section>
         </div>
       </section>
 
@@ -282,19 +514,84 @@
           <h2 class="signoff">Meet Fridgy.<br />Your food. Smarter.</h2>
         </div>
       </section>
+
+      <section class="chapter solo team" id="team" data-state="team">
+        <div class="copy">
+          <p class="eyebrow">The team</p>
+          <h2>The people behind Fridgy</h2>
+          <p>Four people, two teams. Fridgy would like to introduce them.</p>
+          <div class="slides">
+            <div class="slide-tabs" role="tablist" aria-label="Team">
+              <button type="button" role="tab" aria-selected="true" data-go="0">Development</button>
+              <button type="button" role="tab" aria-selected="false" data-go="1">Design</button>
+            </div>
+            <div class="slides-window">
+              <div class="slides-track">
+                <section class="slide" aria-label="Development team">
+                  <ul class="members">
+                  <li class="member" data-line="First, our developers! This is Ahmed Nasser, our mobile developer. 3 years building apps, and he works at Sahl Solutions.">
+                    <img class="photo-avatar" src="/img/team/ahmed.webp" alt="Portrait of Ahmed Nasser" width="600" height="600" loading="lazy" />
+                    <div>
+                      <h4>Ahmed Nasser</h4>
+                      <p class="role">Mid-level Mobile Developer</p>
+                      <p class="bio">3 years of experience. Works at Sahl Solutions.</p>
+                      <p class="says">"This is Ahmed, he builds the app you hold!"</p>
+                    </div>
+                  </li>
+                  <li class="member" data-line="Say hi to Zeyad Mohamed, a mid-level developer with 4 years of experience.">
+                    <img class="photo-avatar" src="/img/team/zeyad.webp" alt="Portrait of Zeyad Mohamed" width="600" height="600" loading="lazy" />
+                    <div>
+                      <h4>Zeyad Mohamed</h4>
+                      <p class="role">Mid-level Developer</p>
+                      <p class="bio">4 years of experience.</p>
+                      <p class="says">"Say hi to Zeyad!"</p>
+                    </div>
+                  </li>
+                  </ul>
+                </section>
+                <section class="slide" aria-label="Design team">
+                  <ul class="members">
+                  <li class="member" data-line="Now our designers! Meet Mohamed Seafen, our UI/UX designer, with 6+ years designing digital products.">
+                    <img class="photo-avatar" src="/img/team/mohamed.webp" alt="Portrait of Mohamed Seafen" width="600" height="600" loading="lazy" />
+                    <div>
+                      <h4>Mohamed Seafen</h4>
+                      <p class="role">UI/UX Designer</p>
+                      <p class="bio">6+ years of experience designing digital products.</p>
+                      <p class="says">"Meet Mohamed, our UI/UX designer!"</p>
+                    </div>
+                  </li>
+                  <li class="member" data-line="And this is Yousef Abdelmoaty, our product designer, with 3 years of experience.">
+                    <img class="photo-avatar" src="/img/team/yousef.webp" alt="Portrait of Yousef Abdelmoaty" width="600" height="600" loading="lazy" />
+                    <div>
+                      <h4>Yousef Abdelmoaty</h4>
+                      <p class="role">Product Designer</p>
+                      <p class="bio">3 years of experience.</p>
+                      <p class="says">"And this is Yousef, our product designer!"</p>
+                    </div>
+                  </li>
+                  </ul>
+                </section>
+              </div>
+            </div>
+          </div>
+          <p class="thanks" data-line="That's the team! Thank you for having us, UX Breakfast 💚">Thank you for having us, UX Breakfast.</p>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
       <div>
-        <p class="brand">Fridgy</p>
+        <p class="brand"><img src="/img/brand/logo.svg" alt="" width="40" height="41" />Fridgy</p>
         <p>Your food. Smarter.</p>
       </div>
       <nav aria-label="Footer">
         <a href="#story">Story</a>
         <a href="#problem">Problem</a>
         <a href="#how">How it works</a>
+        <a href="#app">The app</a>
         <a href="#customers">Customers</a>
         <a href="#business">Business model</a>
+        <a href="#team">Team</a>
       </nav>
       <p class="legal">© 2026 Fridgy. Food waste figures from the UNEP Food Waste Index Report 2024.</p>
     </footer>
